@@ -1,0 +1,22 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.0.31903.59
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ExecuteUpdateDemo", "ExecuteUpdateDemo\ExecuteUpdateDemo.csproj", "{120BA61E-4233-49D6-9275-DA1D93A25893}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{120BA61E-4233-49D6-9275-DA1D93A25893}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{120BA61E-4233-49D6-9275-DA1D93A25893}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{120BA61E-4233-49D6-9275-DA1D93A25893}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{120BA61E-4233-49D6-9275-DA1D93A25893}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+EndGlobal
