@@ -49,6 +49,8 @@ This code generates correct SQL
 
 ## Using select with two entities/tables starting with same letter
 
+**This issue is solved in version 7.0.11 of EF Core.**
+
 ```csharp
             var r = db.Contestations.Where(c => c.Id == 1)
                 .Select(c => new
@@ -69,6 +71,17 @@ In this sql-statement the same alias is being reused
           SELECT "c"."Id"
           FROM "Credits" "c"
           WHERE "c"."Reference" = "c"."CreditReference"
+          FETCH FIRST 1 ROWS ONLY)
+      WHERE "c"."Id" = 1
+```
+
+This issue is solved in 7.0.11. The sql-statement being generated is
+```sql
+      UPDATE "Contestations" "c"
+      SET "c"."CreditId" = (
+          SELECT "c0"."Id"
+          FROM "Credits" "c0"
+          WHERE "c0"."Reference" = "c"."CreditReference"
           FETCH FIRST 1 ROWS ONLY)
       WHERE "c"."Id" = 1
 ```
