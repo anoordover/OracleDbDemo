@@ -74,6 +74,28 @@ public class Program
             Console.WriteLine(exception);
         }
     }
+
+    private static void ExecuteUpdateWithSelectNew2(DemoDbContext db)
+    {
+        try
+        {
+            var r = db.Contestations.Where(c => c.Id == 1)
+                .Select(c => new
+                {
+                    contestation = c,
+                    credit = db.Credits
+                        .First(d => d.Reference == c.CreditReference).Id
+                })
+                .ExecuteUpdate(calls => calls.SetProperty(
+                    c => c.contestation.CreditId,
+                    c => c.credit));
+        }
+        catch (Exception exception)
+        {
+            Console.WriteLine(exception);
+        }
+    }
+
     private static void ExecuteUpdateWithSelectNew3(DemoDbContext db)
     {
         try
@@ -92,26 +114,6 @@ public class Program
                 .ExecuteUpdate(calls => calls.SetProperty(
                     c => c.credit.DeclarationId,
                     c => c.declaration.Id));
-        }
-        catch (Exception exception)
-        {
-            Console.WriteLine(exception);
-        }
-    }
-    private static void ExecuteUpdateWithSelectNew2(DemoDbContext db)
-    {
-        try
-        {
-            var r = db.Contestations.Where(c => c.Id == 1)
-                .Select(c => new
-                {
-                    contestation = c,
-                    credit = db.Credits
-                        .First(d => d.Reference == c.CreditReference).Id
-                })
-                .ExecuteUpdate(calls => calls.SetProperty(
-                    c => c.contestation.CreditId,
-                    c => c.credit));
         }
         catch (Exception exception)
         {
