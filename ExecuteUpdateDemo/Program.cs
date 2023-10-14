@@ -40,6 +40,9 @@ public class Program
             PrintSeparator();
             ExecuteUpdateWithSelectNew2(db);
             Console.ReadLine();
+            PrintSeparator();
+            ExecuteUpdateWithSelectNew3(db);
+            Console.ReadLine();
         }
 
     }
@@ -59,6 +62,30 @@ public class Program
                 .Select(c => new
                 {
                     credit = c,
+                    declaration = db.Declarations
+                        .First(d => d.Reference == c.DeclarationReference)
+                })
+                .ExecuteUpdate(calls => calls.SetProperty(
+                    c => c.credit.DeclarationId,
+                    c => c.declaration.Id));
+        }
+        catch (Exception exception)
+        {
+            Console.WriteLine(exception);
+        }
+    }
+    private static void ExecuteUpdateWithSelectNew3(DemoDbContext db)
+    {
+        try
+        {
+            var r = db.Credits.Where(c => c.Id == 1)
+                .Select(c => new
+                {
+                    credit = new Credit
+                    {
+                        Id = c.Id,
+                        DeclarationId = c.DeclarationId
+                    },
                     declaration = db.Declarations
                         .First(d => d.Reference == c.DeclarationReference)
                 })
