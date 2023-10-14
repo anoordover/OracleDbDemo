@@ -1,33 +1,45 @@
 using ExecuteUpdateDemo.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
+using Testcontainers.Oracle;
 
 namespace ExecuteUpdateDemo;
 
 public class Program
 {
-    public static void Main(string[] args)
+    public static async Task Main(string[] args)
     {
+        var container = new OracleBuilder()
+            .Build();
+        await container.StartAsync();
+
         var sp = new ServiceCollection()
             .AddDbContext<DemoDbContext>(options =>
             {
                 options.UseOracle(
-                    "Data Source=dev;Persist Security Info=True;User ID=demo;Password=demo;");
+                    container.GetConnectionString());
                 options.LogTo(Console.WriteLine);
             })
             .BuildServiceProvider();
 
-        using var db = sp.GetRequiredService<DemoDbContext>();
+        await using var db = sp.GetRequiredService<DemoDbContext>();
         {
+            await db.Database.MigrateAsync();
             var credits = db.Credits.ToList();
 
             Console.WriteLine(credits.Count);
             
             ExecuteUpdateWithJoin(db);
+            Console.ReadLine();
+            PrintSeparator();
+            ExecuteUpdateWithJoin2(db);
+            Console.ReadLine();
             PrintSeparator();
             ExecuteUpdateWithSelectNew1(db);
+            Console.ReadLine();
             PrintSeparator();
             ExecuteUpdateWithSelectNew2(db);
+            Console.ReadLine();
         }
 
     }
@@ -68,11 +80,11 @@ public class Program
                 {
                     contestation = c,
                     credit = db.Credits
-                        .First(d => d.Reference == c.CreditReference)
+                        .First(d => d.Reference == c.CreditReference).Id
                 })
                 .ExecuteUpdate(calls => calls.SetProperty(
                     c => c.contestation.CreditId,
-                    c => c.credit.Id));
+                    c => c.credit));
         }
         catch (Exception exception)
         {
@@ -92,6 +104,25 @@ public class Program
                 .ExecuteUpdate(calls => calls.SetProperty(
                     c => c.credit.DeclarationId,
                     c => c.declaration.Id));
+        }
+        catch (Exception exception)
+        {
+            Console.WriteLine(exception);
+        }
+    }
+
+    private static void ExecuteUpdateWithJoin2(DemoDbContext db)
+    {
+        try
+        {
+            var s = db.Contestations.Where(c => c.Id == 1)
+                .Join(db.Credits,
+                    c => c.DeclarationReference,
+                    d => d.Reference,
+                    (contestation, credit) => new {contestation, credit.Id})
+                .ExecuteUpdate(calls => calls.SetProperty(
+                    c => c.contestation.CreditId,
+                    c => c.Id));
         }
         catch (Exception exception)
         {

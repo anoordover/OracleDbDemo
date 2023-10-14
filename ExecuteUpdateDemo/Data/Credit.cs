@@ -8,7 +8,15 @@ public class Credit
 
     public string DeclarationReference { get; set; }
     
+    public Period Period { get; set; }
+    
     public long? DeclarationId { get; set; }
 
     public Declaration? Declaration { get; set; }
+}
+
+public class Period
+{
+    public DateTime StartDate { get; set; }
+    public DateTime EndDate { get; set; }
 }
