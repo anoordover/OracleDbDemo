@@ -1,7 +1,7 @@
 using ExecuteUpdateDemo.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
-using Testcontainers.Oracle;
+using Testcontainers.PostgreSql;
 
 namespace ExecuteUpdateDemo;
 
@@ -9,14 +9,14 @@ public class Program
 {
     public static async Task Main(string[] args)
     {
-        var container = new OracleBuilder()
+        var container = new PostgreSqlBuilder()
             .Build();
         await container.StartAsync();
 
         var sp = new ServiceCollection()
             .AddDbContext<DemoDbContext>(options =>
             {
-                options.UseOracle(
+                options.UseNpgsql(
                     container.GetConnectionString());
                 options.LogTo(Console.WriteLine);
             })
