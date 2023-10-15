@@ -20,15 +20,14 @@ public class DemoDbContext : DbContext
             .HasIndex(c => c.Reference)
             .IsUnique();
         modelBuilder.Entity<Credit>()
-            .OwnsOne(c => c.Period,
+            .ComplexProperty(c => c.Period,
                 nb =>
                 {
                     nb.Property(p => p.StartDate)
                         .IsRequired();
                     nb.Property(p => p.EndDate)
                         .IsRequired();
-                }).Navigation(c => c.Period)
-            .IsRequired();
+                });
         modelBuilder.Entity<Contestation>()
             .HasIndex(c => c.Reference)
             .IsUnique();
