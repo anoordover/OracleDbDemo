@@ -27,8 +27,18 @@ public class DemoDbContext : DbContext
                         .IsRequired();
                     nb.Property(p => p.EndDate)
                         .IsRequired();
-                }).Navigation(c => c.Period)
-            .IsRequired();
+                });
+        modelBuilder.Entity<Credit>()
+            .ComplexProperty(c => c.OptionalPeriod,
+                nb =>
+                {
+                    nb.Property(p => p.DatumVanaf)
+                        .HasColumnName("uitkeringvanaf")
+                        .IsRequired(false);
+                    nb.Property(p => p.DatumTm)
+                        .HasColumnName("uitkeringtm")
+                        .IsRequired(false);
+                });
         modelBuilder.Entity<Contestation>()
             .HasIndex(c => c.Reference)
             .IsUnique();
