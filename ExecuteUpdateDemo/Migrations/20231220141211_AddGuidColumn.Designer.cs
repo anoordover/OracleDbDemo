@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using ExecuteUpdateDemo.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Oracle.EntityFrameworkCore.Metadata;
 
@@ -12,9 +13,11 @@ using Oracle.EntityFrameworkCore.Metadata;
 namespace ExecuteUpdateDemo.Migrations
 {
     [DbContext(typeof(DemoDbContext))]
-    partial class DemoDbContextModelSnapshot : ModelSnapshot
+    [Migration("20231220141211_AddGuidColumn")]
+    partial class AddGuidColumn
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -130,21 +133,6 @@ namespace ExecuteUpdateDemo.Migrations
                         .IsUnique();
 
                     b.ToTable("Declarations");
-                });
-
-            modelBuilder.Entity("ExecuteUpdateDemo.Data.DummyEntity", b =>
-                {
-                    b.Property<byte[]>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("RAW(16)");
-
-                    b.Property<string>("Tekst")
-                        .IsRequired()
-                        .HasColumnType("NVARCHAR2(2000)");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("Dummy");
                 });
 
             modelBuilder.Entity("ExecuteUpdateDemo.Data.Contestation", b =>

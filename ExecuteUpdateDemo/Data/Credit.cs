@@ -4,6 +4,8 @@ public class Credit
 {
     public long Id { get; set; }
 
+    public Guid GuidField { get; set; }
+
     public string Reference { get; set; }
 
     public string DeclarationReference { get; set; }

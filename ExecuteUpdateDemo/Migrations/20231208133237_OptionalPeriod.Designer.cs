@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using ExecuteUpdateDemo.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Oracle.EntityFrameworkCore.Metadata;
 
@@ -12,9 +13,11 @@ using Oracle.EntityFrameworkCore.Metadata;
 namespace ExecuteUpdateDemo.Migrations
 {
     [DbContext(typeof(DemoDbContext))]
-    partial class DemoDbContextModelSnapshot : ModelSnapshot
+    [Migration("20231208133237_OptionalPeriod")]
+    partial class OptionalPeriod
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -80,9 +83,6 @@ namespace ExecuteUpdateDemo.Migrations
                         .IsRequired()
                         .HasColumnType("NVARCHAR2(450)");
 
-                    b.Property<Guid>("GuidField")
-                        .HasColumnType("RAW(16)");
-
                     b.Property<string>("Reference")
                         .IsRequired()
                         .HasColumnType("NVARCHAR2(450)");
@@ -98,6 +98,17 @@ namespace ExecuteUpdateDemo.Migrations
                             b1.Property<DateTime?>("DatumVanaf")
                                 .HasColumnType("TIMESTAMP(7)")
                                 .HasColumnName("uitkeringvanaf");
+                        });
+
+                    b.ComplexProperty<Dictionary<string, object>>("Period", "ExecuteUpdateDemo.Data.Credit.Period#Period", b1 =>
+                        {
+                            b1.IsRequired();
+
+                            b1.Property<DateTime>("EndDate")
+                                .HasColumnType("TIMESTAMP(7)");
+
+                            b1.Property<DateTime>("StartDate")
+                                .HasColumnType("TIMESTAMP(7)");
                         });
 
                     b.HasKey("Id");
@@ -132,21 +143,6 @@ namespace ExecuteUpdateDemo.Migrations
                     b.ToTable("Declarations");
                 });
 
-            modelBuilder.Entity("ExecuteUpdateDemo.Data.DummyEntity", b =>
-                {
-                    b.Property<byte[]>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("RAW(16)");
-
-                    b.Property<string>("Tekst")
-                        .IsRequired()
-                        .HasColumnType("NVARCHAR2(2000)");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("Dummy");
-                });
-
             modelBuilder.Entity("ExecuteUpdateDemo.Data.Contestation", b =>
                 {
                     b.HasOne("ExecuteUpdateDemo.Data.Credit", "Credit")
@@ -168,29 +164,7 @@ namespace ExecuteUpdateDemo.Migrations
                         .WithMany()
                         .HasForeignKey("DeclarationId");
 
-                    b.OwnsOne("ExecuteUpdateDemo.Data.Period", "Period", b1 =>
-                        {
-                            b1.Property<long>("CreditId")
-                                .HasColumnType("NUMBER(19)");
-
-                            b1.Property<DateTime>("EndDate")
-                                .HasColumnType("TIMESTAMP(7)");
-
-                            b1.Property<DateTime>("StartDate")
-                                .HasColumnType("TIMESTAMP(7)");
-
-                            b1.HasKey("CreditId");
-
-                            b1.ToTable("Credits");
-
-                            b1.WithOwner()
-                                .HasForeignKey("CreditId");
-                        });
-
                     b.Navigation("Declaration");
-
-                    b.Navigation("Period")
-                        .IsRequired();
                 });
 #pragma warning restore 612, 618
         }

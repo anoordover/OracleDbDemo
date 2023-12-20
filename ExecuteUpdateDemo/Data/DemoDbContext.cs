@@ -48,9 +48,13 @@ public class DemoDbContext : DbContext
         modelBuilder.Entity<Contestation>()
             .HasIndex(c => new {c.CreditId, c.CreditReference})
             .IsUnique();
+        modelBuilder.Entity<DummyEntity>()
+            .Property(d => d.Id)
+            .HasConversion<byte[]>();
     }
 
     public virtual DbSet<Credit> Credits { get; set; }
+    public virtual DbSet<DummyEntity> Dummy { get; set; }
 
     public virtual DbSet<Declaration> Declarations { get; set; }
     
